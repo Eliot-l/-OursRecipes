@@ -9,13 +9,42 @@
 #   end
 
 
-Recipe.new(name: "Pasta", description: "Pasta with tomato sauce", duration: 30, rating: 5, difficulty: "easy", price: 10, recipe_ingredient_id: 1).save
+# Supprime les données existantes pour éviter les doublons
+Ingredient.destroy_all
+RecipeIngredient.destroy_all
+Recipe.destroy_all
 
-RecipeIngredient.new(name: "Pasta", quantity: 1, unit: "kg", recipe_id: 1).save
-# t.text "description"
-#     t.string "name"
-#     t.integer "duration"
-#     t.integer "rating"
-#     t.string "difficulty"
-#     t.integer "price"
-#     t.bigint "recipe_ingredient_id", null: false
+User.create!(email: "admin@gmail.com", password: "azeqsd")
+
+# Création des ingrédients
+ingredients = []
+15.times do |i|
+  ingredients << Ingredient.create!(name: "Ingrédient #{i + 1}")
+end
+puts "15 ingrédients créés."
+
+# Création des recettes
+recipes = []
+5.times do |i|
+  recipes << Recipe.create!(
+    name: "Recette #{i + 1}",
+    description: "Description de la recette #{i + 1}",
+    duration: rand(10..120), # Durée entre 10 et 120 minutes
+    rating: rand(1..5), # Note entre 1 et 5
+    difficulty: ["Facile", "Moyenne", "Difficile"].sample, # Difficulté aléatoire
+    price: rand(5..50), # Prix entre 5 et 50 euros
+    user: User.first # Associe le premier utilisateur
+  )
+end
+puts "5 recettes créées."
+
+# Création des associations `recipe_ingredients`
+10.times do
+  RecipeIngredient.create!(
+    recipe: recipes.sample, # Associe une recette aléatoire
+    ingredient: ingredients.sample, # Associe un ingrédient aléatoire
+    quantity: rand(1..5), # Quantité entre 1 et 5
+    unit: ["g", "ml", "pcs"].sample # Unité aléatoire
+  )
+end
+puts "10 associations RecipeIngredient créées."
